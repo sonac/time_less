@@ -73,7 +73,8 @@ async def scheduler_job():
 
     await send_summary_to_subscribers()
     logging.info("done sending summaries going to sleep")
-    await sleep(300)
+    sleep_time = 60*60*24 # 1 day
+    await sleep(sleep_time)
     await scheduler_job()
 
 def run_bot_in_thread():
