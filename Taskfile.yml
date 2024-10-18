@@ -1,0 +1,9 @@
+version: "3"
+
+tasks:
+  docker-build:
+    cmds:
+      - docker build -t ghcr.io/sonac/time_less:latest .
+  run-server:
+    cmds:
+      - python app/main.py
