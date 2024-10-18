@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+  app:
+    build: .
+    container_name: time_less
+    env_file:
+      - .env
+    volumes:
+      - ./app/speech:/usr/src/app/speech
+      - ./app/logs:/usr/src/app/logs
+      - ./app/db:/usr/src/app/db
+    restart: unless-stopped
