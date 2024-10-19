@@ -1,10 +1,10 @@
 import asyncio
 import logging
 import os
-import signal
+import time
 import threading
 from asyncio import sleep
-from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -63,9 +63,8 @@ async def send_summary_to_subscribers():
     except Exception as e:
         logging.error(f"an error occurred {e}")
 
-async def scheduler_job():
-
-    logging.info("starting scheduler job")
+async def summarize_and_send():
+    logging.info("starting summarization job")
     articles = get_today_articles()
     prompt = prepare_prompt(articles)
     summary = get_summary(prompt)
@@ -73,9 +72,25 @@ async def scheduler_job():
 
     await send_summary_to_subscribers()
     logging.info("done sending summaries going to sleep")
-    sleep_time = 60*60*24 # 1 day
-    await sleep(sleep_time)
-    await scheduler_job()
+
+def wait_one_minute():
+    now = datetime.now(timezone.utc)
+    next_minute = (now + timedelta(minutes=1)).replace(second=0, microsecond=0)
+    sleep_duration = (next_minute - now).total_seconds()
+    time.sleep(sleep_duration)
+
+
+async def scheduler_job():
+    task_executed_today = False
+    while True:
+        now = datetime.now(timezone.utc)
+        if now.hour == 6 and (now.minute == 0 and not task_executed_today):
+            await summarize_and_send()
+            task_executed_today = True
+        elif now.hour != 6:
+            logging.info("sleeping for a minute")
+            task_executed_today = False
+        wait_one_minute()
 
 def run_bot_in_thread():
     bot_thread = threading.Thread(target=telegram_bot.start_bot, daemon=True)

@@ -11,7 +11,7 @@ from model import db, Subscriber
 
 load_dotenv()
 
-logging.basicConfig(format='%(asctime)s [%(levelname)s] - %(message)s', level=logging.DEBUG, handlers=[logging.StreamHandler(), logging.FileHandler(
+logging.basicConfig(format='%(asctime)s [%(levelname)s] - %(message)s', level=logging.INFO, handlers=[logging.StreamHandler(), logging.FileHandler(
     'app/logs/telegram.log')])
 
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
