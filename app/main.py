@@ -3,12 +3,10 @@ import logging
 import os
 import time
 import threading
-from asyncio import sleep
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 from dotenv import load_dotenv
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 import telegram_bot
 
@@ -84,6 +82,7 @@ async def scheduler_job():
     task_executed_today = False
     while True:
         now = datetime.now(timezone.utc)
+        logging.info(now.hour)
         if now.hour == 6 and (now.minute == 0 and not task_executed_today):
             await summarize_and_send()
             task_executed_today = True
@@ -92,22 +91,21 @@ async def scheduler_job():
             task_executed_today = False
         wait_one_minute()
 
-def run_bot_in_thread():
-    bot_thread = threading.Thread(target=telegram_bot.start_bot, daemon=True)
-    bot_thread.start()
-    logging.info("Telegram bot started in a separate thread.")
+def scheduler_loop():
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    loop.run_until_complete(scheduler_job())
+    loop.close()
 
-
-async def main():
+def main():
     initialize_database()
-    await telegram_bot.start_bot()
-
-    await scheduler_job()
+    s_task = threading.Thread(target=scheduler_loop)
+    s_task.start()
+    telegram_bot.run_bot()
 
 
 if __name__ == '__main__':
     try:
-        asyncio.run(main())
+        main()
     except (KeyboardInterrupt, SystemExit):
         logging.info("application stopped by user")
-        asyncio.run(telegram_bot.stop_bot())

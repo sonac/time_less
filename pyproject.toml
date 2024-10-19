@@ -6,7 +6,7 @@ authors = ["sonac <sonag007@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.12"
 openai = ">=1.51.2,<1.52.0"
 python-dotenv = ">=1.0.1,<1.1.0"
 apscheduler = ">=3.10.4,<3.11.0"

@@ -11,7 +11,7 @@ openai.api_key = OPENAI_API_KEY
 
 def prepare_prompt(articles):
     prompt = """Please provide a concise summary of the following news articles from the last couple of days in a form 
-    of one meaningful story about what happened. The articles are following: """
+    of one meaningful story about what happened. This summary and you answer should be in fully in Russian. The articles are following: """
     for article in articles:
         prompt += f"**Title:** {article.title}\n**Text:** {article.text}\n\n"
     prompt += "### Summary:"

@@ -90,12 +90,17 @@ def register_handlers(app: Application):
     app.add_handler(CommandHandler("help", help_command))
 
 
-async def start_bot():
+def start_bot():
     register_handlers(app)
     logging.info("Starting Telegram Bot...")
-    await app.initialize()
-    await app.start()
-    await app.updater.start_polling()
+    app.initialize()
+    app.start()
+    app.updater.start_polling()
+    logging.info("Telegram Bot started")
+
+def run_bot():
+    register_handlers(app)
+    app.run_polling()
 
 async def stop_bot():
     await app.updater.stop()
