@@ -82,12 +82,10 @@ async def scheduler_job():
     task_executed_today = False
     while True:
         now = datetime.now(timezone.utc)
-        logging.info(now.hour)
         if now.hour == 6 and (now.minute == 0 and not task_executed_today):
             await summarize_and_send()
             task_executed_today = True
         elif now.hour != 6:
-            logging.info("sleeping for a minute")
             task_executed_today = False
         wait_one_minute()
 
