@@ -52,8 +52,9 @@ def fetch_page_content(url: str) -> str:
 def extract_articles(html_content: str) -> list[Article]:
     soup = BeautifulSoup(html_content, 'html.parser')
     articles = []
-
-    for block in soup.find_all('div', class_='teaser-data-wrap col-12'):
+    blocks = soup.find_all('div', class_='teaser-data-wrap col-12')
+    logging.info(blocks)
+    for block in blocks:
         title_tag = block.find('a')
         if title_tag:
             link = title_tag['href']
