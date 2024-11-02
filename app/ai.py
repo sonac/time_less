@@ -15,6 +15,7 @@ def prepare_prompt(articles):
     for article in articles:
         prompt += f"**Title:** {article.title}\n**Text:** {article.text}\n\n"
     prompt += "### Summary:"
+    logging.info(prompt)
     return prompt
 
 def get_summary(prompt, max_tokens=5000):
