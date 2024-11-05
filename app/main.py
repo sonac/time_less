@@ -99,12 +99,11 @@ def main():
     initialize_database()
     s_task = threading.Thread(target=scheduler_loop)
     s_task.start()
-    #telegram_bot.run_bot()
+    telegram_bot.run_bot()
 
 
 if __name__ == '__main__':
     try:
-        articles = get_today_articles()
         main()
     except (KeyboardInterrupt, SystemExit):
         logging.info("application stopped by user")
